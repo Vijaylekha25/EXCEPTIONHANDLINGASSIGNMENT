@@ -1,0 +1,133 @@
+1Q hat is multithreading in python? why is it used? Name the module used to handle threads in python
+
+Ans-Multithreading in Python allows you to create multiple threads within a single process. Each thread runs independently, executing a specific task concurrently with other threads. Threads share the same memory space, making it easy to communicate and exchange data between them.
+
+Why is multithreading used?
+
+Multithreading is used for various reasons, such as:
+
+Concurrency: Multithreading enables executing multiple tasks simultaneously, improving the overall performance of the program. Responsiveness: It helps maintain the responsiveness of applications by allowing them to perform non-blocking tasks while waiting for certain operations to complete. Resource Utilization: It efficiently utilizes CPU resources, especially in tasks that involve waiting for I/O operations (e.g., reading/writing files, network operations). Module used to handle threads in Python:
+
+Python provides the threading module to handle threads. This module allows you to create, start, and manage threads in a Python program.
+
+2Q why threading module used? rite the use of the following function ( activeCount currentThread enumerate)
+Ans-
+activeCount(): This function returns the number of currently active threads in the program.
+
+currentThread(): This function returns the currently executing thread object.
+
+enumerate(): This function returns a list of all active Thread objects currently running in the program.
+
+3Q. Explain the following functions
+Ans-
+run(): This method defines the entry point for the thread's execution. You need to override this method in your custom thread class to specify the code that the thread will execute.
+
+start(): This method starts the thread's execution by calling the run() method.
+
+join(): This method blocks the calling thread until the thread it joins completes its execution. isAlive(): This method returns True if the thread is currently running or alive, and False otherwise.
+
+4Q. write a python program to create two threads. Thread one must print the list of squares and thread two must print the list of cubes
+Ans-
+import threading
+​
+def print_squares():
+    for i in range(1, 6):
+        print(f"Square of {i}: {i**2}")
+​
+def print_cubes():
+    for i in range(1, 6):
+        print(f"Cube of {i}: {i**3}")
+​
+# Create thread objects
+thread1 = threading.Thread(target=print_squares)
+thread2 = threading.Thread(target=print_cubes)
+​
+# Start the threads
+thread1.start()
+thread2.start()
+​
+# Wait for both threads to finish
+thread1.join()
+thread2.join()
+​
+print("Main thread exiting.")
+Square of 1: 1
+Square of 2: 4
+Square of 3: 9
+Square of 4: 16
+Square of 5: 25
+Cube of 1: 1
+Cube of 2: 8
+Cube of 3: 27
+Cube of 4: 64
+Cube of 5: 125
+Main thread exiting.
+5Q. State advantages and disadvantages of multithreading
+Ans-
+Advantages:
+
+Improved Performance: Multithreading allows concurrent execution, utilizing multiple CPU cores and improving overall performance, especially for CPU-bound tasks. Responsiveness: Multithreading keeps applications responsive by allowing them to perform other tasks while waiting for certain operations to complete. Resource Sharing: Threads can share memory space, making it easier to communicate and exchange data between them. Concurrency for I/O Bound Tasks: Multithreading is beneficial for tasks involving I/O operations, where the program can switch between threads while waiting for I/O. Disadvantages:
+
+Complexity: Multithreading introduces complexities like race conditions and deadlocks, making debugging and maintenance challenging. GIL Limitations: In CPython, the Global Interpreter Lock (GIL) restricts true multi-core parallelism, limiting the benefits of multithreading for CPU-bound tasks. Synchronization Overhead: Thread synchronization mechanisms like locks and semaphores can introduce overhead and potentially slow down the application.
+
+6Q. Explain deadlocks and race conditions.
+Ans- 
+Deadlock: Deadlock occurs when two or more threads are unable to proceed because each is waiting for the other to release a resource or complete a task. Essentially, the threads are stuck in a cycle of waiting. This situation can lead to a program freezing or becoming unresponsive.
+Example of deadlock:
+import threading
+​
+lock1 = threading.Lock()
+lock2 = threading.Lock()
+​
+def task1():
+    with lock1:
+        with lock2:
+            print("Task 1 completed.")
+​
+def task2():
+    with lock2:
+        with lock1:
+            print("Task 2 completed.")
+​
+thread1 = threading.Thread(target=task1)
+thread2 = threading.Thread(target=task2)
+​
+thread1.start()
+thread2.start()
+​
+thread1.join()
+thread2.join()
+​
+print("Main thread exiting.")    
+ Race Condition: A race condition occurs when two or more threads access shared resources or variables simultaneously, leading to unpredictable and incorrect results. The outcome of the program depends on the relative timing of thread execution, making it non-deterministic.
+Example of a race condition:
+import threading
+​
+counter = 0
+​
+def increment_counter():
+    global counter
+    for _ in range(100000):
+        counter += 1
+​
+def decrement_counter():
+    global counter
+    for _ in range(100000):
+        counter -= 1
+​
+thread1 = threading.Thread(target=increment_counter)
+thread2 = threading.Thread(target=decrement_counter)
+​
+thread1.start()
+thread2.start()
+​
+thread1.join()
+thread2.join()
+​
+print("Counter value:", counter)
+In the above example, the final value of counter is not predictable due to the race condition. The threads accessing and modifying counter simultaneously can lead to unexpected results.   
+    
+    
+    
+
+
